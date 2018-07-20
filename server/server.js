@@ -44,12 +44,34 @@ app.get('/todos/:id', (req, res) => {
         if (!todos) {
             res.status(404).send({
                 message: 'ID not Found',
-                status: 400
+                status: 404
             });
         }
         res.send({todos});
     }, (e) => {
-        res.status(400).send(e);
+        res.status(404).send(e);
+    });
+});
+// DELETE TODO
+app.delete('/todos/:id', (req, res) => {
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send({
+            message: 'ID not Valid',
+            status: 404
+        })
+    }
+    Todo.findByIdAndRemove(id).then((todos) => {
+        if (!todos) {
+            res.status(404).send({
+                message: 'ID not Found',
+                status: 404
+            });
+        }
+        res.status(200).send({todos});
+    }, (e) => {
+        res.status(404).send(e);
     });
 });
 
